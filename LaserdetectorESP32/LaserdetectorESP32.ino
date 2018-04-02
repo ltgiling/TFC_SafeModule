@@ -308,7 +308,6 @@ void loop() {
       delay(1000);
     }
   }
-
   oocsi.check();
 }
 void processOOCSI() {
