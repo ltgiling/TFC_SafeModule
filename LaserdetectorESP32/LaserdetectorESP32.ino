@@ -11,6 +11,7 @@ const char* hostserver = "oocsi.id.tue.nl";
 
 //servo & reset definitions
 int Laser = 14;
+int LaserOn = 0;
 #define BUTTON_PIN 32
 #define TIMER_WIDTH 16
 bool oldState = HIGH;
@@ -61,7 +62,7 @@ void setup()
 {
   Serial.begin (2400);
   oocsi.connect(OOCSIName, hostserver, ssid, password, processOOCSI);
-  oocsi.subscribe("testchannel");
+  oocsi.subscribe("SafeModule");
 
   pinMode(Detector,  INPUT);
   pinMode(Detector2, INPUT);
@@ -155,7 +156,7 @@ void loop() {
   }
 
   //thresholds for the pixel settings for 1st LED
-  if (Timeval > 10 && set100 == 0) {
+  if (Timeval > 100 && set100 == 0) {
     Serial.println("check1");
     if (!set100) {
       strip.setPixelColor(0, 255, 0, 0);
@@ -164,7 +165,7 @@ void loop() {
       Serial.println("check2");
     }
   }
-  if (Timeval > 20 && set200 == 0) {
+  if (Timeval > 200 && set200 == 0) {
     Serial.println("check3");
     if (!set200) {
       strip.setPixelColor(1, 255, 200, 0);
@@ -173,7 +174,7 @@ void loop() {
       Serial.println("check4");
     }
   }
-  if (Timeval > 30 && set300 == 0) {
+  if (Timeval > 300 && set300 == 0) {
     Serial.println("check5");
     if (!set300) {
       strip.setPixelColor(2, 0, 255, 0);
@@ -185,7 +186,7 @@ void loop() {
   }
 
   //thresholds for the pixel settings for 2nd LED
-  if (Timeval2 > 10 && set1002 == 0) {
+  if (Timeval2 > 100 && set1002 == 0) {
     Serial.println("check2.1");
     if (!set1002) {
       strip2.setPixelColor(0, 255, 0, 0);
@@ -194,7 +195,7 @@ void loop() {
       Serial.println("check2.2");
     }
   }
-  if (Timeval2 > 20 && set2002 == 0) {
+  if (Timeval2 > 200 && set2002 == 0) {
     Serial.println("check2.3");
     if (!set2002) {
       strip2.setPixelColor(1, 255, 200, 0);
@@ -203,7 +204,7 @@ void loop() {
       Serial.println("check2.4");
     }
   }
-  if (Timeval2 > 30 && set3002 == 0) {
+  if (Timeval2 > 300 && set3002 == 0) {
     Serial.println("check2.5");
     if (!set3002) {
       strip2.setPixelColor(2, 0, 255, 0);
@@ -215,7 +216,7 @@ void loop() {
   }
 
   //thresholds for the pixel settings for 3rd LED
-  if (Timeval3 > 10 && set1003 == 0) {
+  if (Timeval3 > 100 && set1003 == 0) {
     Serial.println("check3.1");
     if (!set1003) {
       strip3.setPixelColor(0, 255, 0, 0);
@@ -224,7 +225,7 @@ void loop() {
       Serial.println("check3.2");
     }
   }
-  if (Timeval3 > 20 && set2003 == 0) {
+  if (Timeval3 > 200 && set2003 == 0) {
     Serial.println("check3.3");
     if (!set2003) {
       strip3.setPixelColor(1, 255, 200, 0);
@@ -233,7 +234,7 @@ void loop() {
       Serial.println("check3.4");
     }
   }
-  if (Timeval3 > 30 && set3003 == 0) {
+  if (Timeval3 > 300 && set3003 == 0) {
     Serial.println("check3.5");
     if (!set3003) {
       strip3.setPixelColor(2, 0, 255, 0);
@@ -308,15 +309,19 @@ void loop() {
       delay(1000);
     }
   }
+
   oocsi.check();
 }
 void processOOCSI() {
-  int SafeLaser = oocsi.getInt("safeLaser", -200);
-  Serial.print(oocsi.getInt("safeLaser", -200));
-  Serial.println();
-  if (SafeLaser == 1) {
-    digitalWrite(Laser, HIGH);
-    delay(10);
+  if (LaserOn == 0) {
+    int SafeLaser = oocsi.getInt("safeLaser", -200);
+    Serial.print(oocsi.getInt("safeLaser", -200));
+    Serial.println();
+    if (SafeLaser == 1) {
+      digitalWrite(Laser, HIGH);
+      LaserOn = 1;
+      delay(10);
+    }
   }
 }
 
