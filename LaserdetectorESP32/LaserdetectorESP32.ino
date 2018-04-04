@@ -3,8 +3,8 @@
 #include "esp32-hal-ledc.h"
 
 OOCSI oocsi = OOCSI();
-const char* ssid = "TCLP";
-const char* password = "Tclp@533112";
+const char* ssid = "OnePlus";
+const char* password = "gili0440";
 const char* OOCSIName = "SafeModuleChip";
 const char* hostserver = "oocsi.id.tue.nl";
 
@@ -94,33 +94,30 @@ void loop() {
     Timeval++;
     Serial.println(Timeval);
   }
+
   if (val == 0) {
     delay(20);
-    if (finalcheck1 == 0) {
-      Timeval = 0;
-      set100 = 0;
-      set200 = 0;
-      set300 = 0;
-      setfinal1 = 0;
-      uint32_t low = strip.Color(0, 0, 0);
-      for (int i1 = 0; i1 < N_LEDS; i1++) {
-        strip.setPixelColor(i1, low);
+      if (finalcheck1 == 0) {
+        Timeval = 0;
+        set100 = 0;
+        set200 = 0;
+        set300 = 0;
+        setfinal1 = 0;
+        strip.setPixelColor(0, 0, 0, 0);
+        strip.setPixelColor(1, 0, 0, 0);
+        strip.setPixelColor(2, 0, 0, 0);
         strip.show();
+        delay(2);
       }
-      //strip.setPixelColor(0, 0, 0, 0);
-      //strip.setPixelColor(1, 0, 0, 0);
-      //strip.setPixelColor(2, 0, 0, 0);
-      //strip.show();
-      delay(2);
     }
-  }
 
   //checks for 2nd sensor
   if (val2 == 1) {
     Timeval2++;
     Serial.println(Timeval2);
+    delay(2);
   }
-  if (val2 == 0) {
+  if (val2 == 0){
     if (finalcheck2 == 0) {
       Timeval2 = 0;
       set1002 = 0;
@@ -300,6 +297,7 @@ void loop() {
       setfinal1 = 0;
       setfinal2 = 0;
       setfinal3 = 0;
+      LaserOn = 0;
       digitalWrite(Laser, LOW);
       oocsi.newMessage("testchannel");
       oocsi.addInt("completeSafe", 0);
